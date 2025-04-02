@@ -1,0 +1,19 @@
+﻿@model Product
+
+@{
+    ViewData["Title"] = "Edit Product";
+}
+<form method="post" asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+
+    <label>Product Name:</label>
+    <input asp-for="Name" type="text" required />
+
+    <label>Type:</label>
+    <input asp-for="Type" type="text" required />
+
+    <label>Manufacturer:</label>
+    <input asp-for="Manufacturer" type="text" required />
+
+    <button type="submit">Update</button>
+</form>
