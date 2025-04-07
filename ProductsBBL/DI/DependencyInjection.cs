@@ -5,10 +5,14 @@ namespace ProductsBLL.DI
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddProductsServices(this IServiceCollection services, string dbPath)
+        public static IServiceCollection AddProductsServices(this IServiceCollection services, string connectionString, string dbName, string collectionName)
         {
+           
             services.AddSingleton<IProductsService, ProductsService>();
-            services.AddProductsRepository(dbPath);
+
+         
+            services.AddProductsRepository(connectionString, dbName, collectionName); 
+
             return services;
         }
     }

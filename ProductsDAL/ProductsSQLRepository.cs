@@ -1,46 +1,52 @@
-﻿using SQLite;
+﻿using MongoDB.Driver;
+using SQLite;
 
 namespace ProductsDAL
 {
     public class ProductsSQLRepository : IProductsRepository
     {
-        private readonly ISQLiteConnection _sqLiteConnection;
-        public ProductsSQLRepository(ISQLiteConnection sqLiteConnection)
+        private readonly IMongoCollection<ProductModel> _productsCollection;
+
+        public ProductsSQLRepository(string connectionString, string dbName, string collectionName)
         {
-            _sqLiteConnection = sqLiteConnection;
-            _sqLiteConnection.CreateTable<ProductModel>();
+            var mongoClient = new MongoClient(connectionString);
+            var database = mongoClient.GetDatabase(dbName);
+            _productsCollection = database.GetCollection<ProductModel>(collectionName);
         }
+
+        
         public void Add(ProductModel product)
         {
-            _sqLiteConnection.Insert(product);
-        }
-        public void Edit(ProductModel product)
-        {
-            _sqLiteConnection.Insert(product);
-        }
-        public void Update(ProductModel product)
-        {
-            _sqLiteConnection.Update(product);
-        }
-        public void Delete(ProductModel product)
-        {
-            _sqLiteConnection.Delete(product);
-        }
-        public ProductModel Get(int id)
-        {
-            TableQuery<ProductModel> result =
-                _sqLiteConnection.Table<ProductModel>().Where(q => q.Id.Equals(id));
-            return result.FirstOrDefault();
+            _productsCollection.InsertOne(product);
         }
 
+        
+        public void Delete(string id)
+        {
+            _productsCollection.DeleteOne(p => p.Id == id);
+        }
+
+        public ProductModel Get(string id)
+        {
+            return _productsCollection.Find(p => p.Id == id).FirstOrDefault();  
+        }
+
+        
         public IEnumerable<ProductModel> Get()
         {
-            return _sqLiteConnection.Table<ProductModel>();
+            return _productsCollection.Find(_ => true).ToList();  
         }
 
+  
+        public void Update(ProductModel product)
+        {
+            _productsCollection.ReplaceOne(p => p.Id == product.Id, product);
+        }
+
+        
         public IEnumerable<ProductModel> GetProducts()
         {
-            throw new NotImplementedException();
+            return _productsCollection.Find(_ => true).ToList(); 
         }
     }
 }

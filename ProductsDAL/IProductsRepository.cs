@@ -4,10 +4,9 @@ namespace ProductsDAL
     public interface IProductsRepository
     {
         void Add(ProductModel product);
-        void Delete(ProductModel product);
+        void Delete(string id);
         IEnumerable<ProductModel> Get();
-        ProductModel Get(int id);
+        ProductModel Get(string id);
         void Update(ProductModel product);
-        IEnumerable<ProductModel> GetProducts();
     }
 }

@@ -8,11 +8,9 @@ namespace ProductsDAL
     {
         private readonly IMongoCollection<ProductModel> _productsCollection;
 
-        public ProductsSQLMongoRepository(string connectionString, string dbName, string collectionName)
+        public ProductsSQLMongoRepository(IMongoCollection<ProductModel> productsCollection)
         {
-            var mongoClient = new MongoClient(connectionString);
-            var database = mongoClient.GetDatabase(dbName);
-            _productsCollection = database.GetCollection<ProductModel>(collectionName);
+            _productsCollection = productsCollection;
         }
 
         public void Add(ProductModel product)
@@ -20,30 +18,39 @@ namespace ProductsDAL
             _productsCollection.InsertOne(product);
         }
 
-        public void Delete(ProductModel product)
+        public void Delete(string id)
         {
-            _productsCollection.DeleteOne(p => p.Id == product.Id);
+            _productsCollection.DeleteOne(p => p.Id == id); 
         }
 
         public IEnumerable<ProductModel> Get()
         {
-            return _productsCollection.Find(_ => true).ToList();
+            try
+            {
+                return _productsCollection.Find(_ => true).ToList();  
+            }
+            catch (MongoAuthenticationException authEx)
+            {
+                
+                Console.WriteLine("Authentication failed: " + authEx.Message);
+                return Enumerable.Empty<ProductModel>();  
+            }
+            catch (Exception ex)
+            {
+               
+                Console.WriteLine("An error occurred: " + ex.Message);
+                return Enumerable.Empty<ProductModel>();  
+            }
         }
 
-        public ProductModel Get(int id)
+        public ProductModel Get(string id)
         {
-            return _productsCollection.Find(p => p.Id == id).FirstOrDefault();
+            return _productsCollection.Find(p => p.Id == id).FirstOrDefault(); 
         }
 
         public void Update(ProductModel product)
         {
-            _productsCollection.ReplaceOne(p => p.Id == product.Id, product);
-        }
-
-        public IEnumerable<ProductModel> GetProducts()
-        {
-            return _productsCollection.Find(_ => true).ToList();
+            _productsCollection.ReplaceOne(p => p.Id == product.Id, product); 
         }
     }
-
 }

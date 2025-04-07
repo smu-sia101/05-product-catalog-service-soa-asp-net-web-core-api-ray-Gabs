@@ -11,77 +11,59 @@ namespace ProductsBLL
             _productsRepository = productsRepository;
         }
 
+        public IEnumerable<ProductDTO> Get()
+        {
+            var products = _productsRepository.Get();
+            return products.Select(p => new ProductDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Type = p.Type,
+                Manufacturer = p.Manufacturer
+            }).ToList();
+        }
+
+        public ProductDTO Get(string id)
+        {
+            var product = _productsRepository.Get(id);
+            if (product == null) return null;
+            return new ProductDTO
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Type = product.Type,
+                Manufacturer = product.Manufacturer
+            };
+        }
+
         public void Add(ProductDTO product)
         {
-            if (product == null)
+            var productModel = new ProductModel
             {
-                throw new ArgumentNullException(nameof(product));
-            }
-
-            ProductModel model = MapDtoToModel(product);
-
-            _productsRepository.Add(model);
+                Id = product.Id,
+                Name = product.Name,
+                Type = product.Type,
+                Manufacturer = product.Manufacturer
+            };
+            _productsRepository.Add(productModel);
         }
 
         public void Update(ProductDTO product)
         {
-            var model = MapDtoToModel(product);
-            _productsRepository.Update(model);
-        }
-        public void Delete(int id)
-        {
-            var product = _productsRepository.Get(id);
-            if (product != null)
-            {
-                _productsRepository.Delete(product);
-            }
-        }
-        public ProductDTO Get(int id)
-        {
-            ProductModel model = _productsRepository.Get(id);
-
-            if (model == null)
-            {
-                throw new InvalidOperationException("Product not found.");
-            }
-            ProductDTO dto = MapModelToDTO(model);
-
-            return dto;
-        }
-
-        public IEnumerable<ProductDTO> Get()
-        {
-            IList<ProductDTO> dTOs = new List<ProductDTO>();
-
-            IEnumerable<ProductModel> models = _productsRepository.Get();
-            foreach (ProductModel model in models)
-            {
-                ProductDTO dto = MapModelToDTO(model);
-                dTOs.Add(dto);
-            }
-            return dTOs;
-        }
-
-        private static ProductDTO MapModelToDTO(ProductModel model)
-        {
-            return new ProductDTO()
-            {
-                Id = model.Id,
-                Manufacturer = model.Manufacturer,
-                Type = model.Type,
-                Name = model.Name
-            };
-        }
-
-        private static ProductModel MapDtoToModel(ProductDTO product)
-        {
-            return new ProductModel()
+            var productModel = new ProductModel
             {
                 Id = product.Id,
-                Manufacturer = product.Manufacturer,
+                Name = product.Name,
                 Type = product.Type,
-                Name = product.Name
+                Manufacturer = product.Manufacturer
             };
+            _productsRepository.Update(productModel);
+        }
+
+        public void Delete(string id)
+        {
+            _productsRepository.Delete(id);
         }
     }
 }
+
