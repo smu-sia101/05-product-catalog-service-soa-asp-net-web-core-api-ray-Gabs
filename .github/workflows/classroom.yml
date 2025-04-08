@@ -1,0 +1,51 @@
+name: Autograding Tests
+
+on:
+  - push
+  - workflow_dispatch
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  autograding:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.x' # Adjust based on project requirements
+
+      - name: Restore dependencies
+        id: restore
+        run: dotnet restore
+
+      - name: Build project
+        id: build-test
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Build Test
+          command: dotnet build --no-restore --configuration Release
+          timeout: 60
+          max-score: 20
+
+      - name: Run Tests
+        id: dotnet-test
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Unit Test
+          command: dotnet test --no-build --configuration Release
+          timeout: 60
+          max-score: 30
+
+      - name: Autograding Reporter
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          BUILD-TEST_RESULTS: "${{ steps.build-test.outputs.result }}"
+          DOTNET-TEST_RESULTS: "${{ steps.dotnet-test.outputs.result }}"
+        with:
+          runners: build-test,dotnet-test

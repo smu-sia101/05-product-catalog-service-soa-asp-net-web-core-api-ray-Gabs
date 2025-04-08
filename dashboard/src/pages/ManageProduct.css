@@ -1,0 +1,146 @@
+/* Container for the page */
+.ManageProduct-container {
+    display: flex;
+    height: 100vh; /* Full viewport height */
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Main content area */
+  .ManageProduct-Content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    padding: 40px;
+    background-color: #fff;
+    overflow: hidden;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  /* Header and paragraph styles */
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #333;
+    text-align: center;
+  }
+  
+  p {
+    font-size: 1.2rem;
+    color: #555;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Form styles */
+  form {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  form div {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  form label {
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  form input,
+  form textarea {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  form input:focus,
+  form textarea:focus {
+    border-color: #007bff;
+  }
+  
+  form button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  form button:hover {
+    background-color: #0056b3;
+  }
+  
+  form button:focus {
+    outline: none;
+  }
+  
+  form textarea {
+    resize: vertical;
+    min-height: 150px;
+  }
+  
+  /* Centered message styles */
+  .message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #d4edda;
+    color: #155724;
+    padding: 15px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    text-align: center;
+    display: none; /* Initially hidden */
+  }
+  
+  .message.success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  .message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
+  /* When the message is displayed */
+  .message.show {
+    display: block;
+  }
+  
+  /* Responsive design for mobile */
+  @media (max-width: 900px) {
+    .ManageProduct-container {
+      flex-direction: column;
+    }
+  
+    .ManageProduct-Content {
+      padding: 20px;
+    }
+  
+    form {
+      width: 100%;
+    }
+  }
+  
